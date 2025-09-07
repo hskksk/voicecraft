@@ -6,6 +6,7 @@ import click
 import yaml
 from voicecraft.filename_generator import FilenameGenerator
 from voicecraft.speech_synthesizer import synthesizer_factory
+from voicecraft.config_generator import ConfigGenerator
 
 
 
@@ -47,85 +48,97 @@ def save_audio(audio_data: bytes, output_path: str):
         sys.exit(1)
 
 
-@click.command()
-@click.option('-c', '--config', 
+@click.group()
+def cli():
+    """VoiceCraft CLI with subcommands."""
+
+
+@cli.command("craft")
+@click.option('-c', '--config',
               help='Path to YAML configuration file')
-@click.option('--override-text', 
+@click.option('--override-text',
               help='Override text from config file')
-@click.option('--override-output', 
+@click.option('--override-output',
               help='Override output file from config file')
-def cli(config, override_text, override_output):
+def craft(config, override_text, override_output):
     """
     Generate speech from text using LiteLLM with various TTS models.
     
     Configuration is loaded from a YAML file. You can override specific settings
     using command line options.
-    
-    Examples:
-      main.py                                    # Use default config file
-      main.py -c my_config.yaml                  # Use custom config file
-      main.py --override-text "Hello!"           # Override text from config
-      main.py --override-output "output.wav"     # Override output file
-    
-    Available models: gpt-4o-audio-preview, gemini-2.5-flash-preview-tts, etc.
-    Available voices: alloy, echo, fable, onyx, nova, shimmer (for OpenAI), Kore, Puck (for Gemini)
     """
-    # 設定ファイルを読み込み
-    config = read_config_file(config)
-    
-    # 設定から値を取得（オーバーライド可能）
-    text_content = override_text or config.get('text', '')
-    output_path = override_output or config.get('output', '')
-    instructions_content = config.get('instructions', '')
-    
-    # モデル設定を取得
-    model_config = config.get('model_config', {})
+    cfg = read_config_file(config)
+
+    text_content = override_text or cfg.get('text', '')
+    output_path = override_output or cfg.get('output', '')
+    instructions_content = cfg.get('instructions', '')
+
+    model_config = cfg.get('model_config', {})
     model = model_config.get('name', 'openai/gpt-4o-audio-preview')
     model_settings = model_config.get('config', {})
-    
-    # テキストコンテンツを取得
+
     if not text_content:
         click.echo("Error: No text content specified in config file or via --override-text.", err=True)
         sys.exit(1)
-    
-    # テキストがファイルパスの場合、ファイルから読み込み
+
     if os.path.exists(text_content):
         with open(text_content, 'r', encoding='utf-8') as f:
             content = f.read().strip()
     else:
         content = text_content
-    
+
     if not content:
         click.echo("Error: No text content found.", err=True)
         sys.exit(1)
-    
-    # 出力ファイル名を決定
+
     if not output_path:
-        # 自動生成されたファイル名を使用
         generator = FilenameGenerator(provider="openai")
         base_filename = generator.generate_filename(content, extension="wav")
         output_path = f"outputs/{base_filename}"
-    
+
     click.echo(f"Output path: {output_path}")
-    
-    # 指示は設定ファイルから直接取得
-    
     click.echo(f"Generating speech for text: {content[:100]}{'...' if len(content) > 100 else ''}")
     click.echo(f"Model: {model}")
     click.echo(f"Config: {model_settings}")
     if instructions_content:
         click.echo(f"Instruction: {instructions_content[:100]}{'...' if len(instructions_content) > 100 else ''}")
-    
-    # 音声合成器を作成
+
     try:
         synthesizer = synthesizer_factory(model, model_settings)
         audio_data = synthesizer.synthesize(content, instructions_content)
     except Exception as e:
         click.echo(f"Error creating synthesizer or generating speech: {e}", err=True)
         sys.exit(1)
-    
-    # 音声を保存
+
     save_audio(audio_data, output_path)
+
+
+@cli.command("gen")
+@click.option('--instructions', '-i', required=True, help='Instructions to guide YAML config generation')
+@click.option('--output', '-o', type=click.Path(dir_okay=False, writable=True, path_type=str),
+              default='speech_configs/generated_config.yaml',
+              help='Output path for generated YAML config')
+@click.option('--model', default='gpt-5-mini', show_default=True, help='LLM model for generation')
+@click.option('--temperature', type=float, default=1.0, show_default=True, help='Sampling temperature')
+@click.option('--max-tokens', type=int, default=10000, show_default=True, help='Max output tokens')
+@click.option('--few-shot', type=click.Path(exists=True, dir_okay=False, readable=True, path_type=str),
+              help='Optional path to a few-shot YAML example to guide generation')
+def gen(instructions, output, model, temperature, max_tokens, few_shot):
+    """Generate a YAML configuration using an LLM and save it to a file."""
+    few_shot_path = Path(few_shot) if few_shot else None
+    try:
+        generator = ConfigGenerator(
+            model_name=model,
+            temperature=temperature,
+            max_output_tokens=max_tokens,
+            few_shot_path=few_shot_path,
+        )
+        out_path = Path(output)
+        generator.generate_to_file(instructions, out_path)
+        click.echo(f"Config generated: {out_path}")
+    except Exception as e:
+        click.echo(f"Error generating config: {e}", err=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

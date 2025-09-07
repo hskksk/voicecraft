@@ -23,11 +23,13 @@ uv sync
 ### Basic Usage
 
 ```bash
-# Generate speech from YAML configuration
-python main.py --config speech_configs/gemini_example.yaml
+# 音声生成
+uv run voicecraft craft -c speech_configs/gemini_example.yaml
+uv run voicecraft craft -c speech_configs/gemini_multi_speaker_example.yaml --override-output outputs/custom_name.wav
 
-# Generate speech with custom output path
-python main.py --config speech_configs/gemini_multi_speaker_example.yaml --output outputs/custom_name.wav
+# コンフィグ生成
+uv run voicecraft gen -i "二人の対話でAIの最新動向、WAV、明瞭でフレンドリー" -o speech_configs/generated_config.yaml
+uv run voicecraft gen -i "技術ニュース独白、1人、WAV" --few-shot speech_configs/gemini_multi_speaker_example.yaml
 ```
 
 ### Configuration Files
