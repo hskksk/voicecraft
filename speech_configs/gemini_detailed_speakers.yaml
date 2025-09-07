@@ -1,0 +1,57 @@
+# Gemini Multi-Speaker Configuration with Detailed Speaker Descriptions
+# This example shows how speaker descriptions are embedded into the prompt
+
+# Text content for a business meeting scenario
+text: |
+  Sarah: Good morning everyone, let's start our weekly team meeting.
+  
+  David: Good morning Sarah. I have some updates on the project timeline.
+  
+  Sarah: Please go ahead, David.
+  
+  David: We're ahead of schedule on the frontend development, but we need to address the backend performance issues.
+  
+  Sarah: That's concerning. Let's prioritize the backend fixes this week.
+
+# Output file path
+# output: "outputs/business_meeting.wav"
+
+# Instructions for speech generation
+instructions: |
+  This is a professional business meeting.
+  Maintain a formal but approachable tone throughout.
+  Use appropriate business meeting etiquette and pacing.
+
+# Model configuration with detailed speaker descriptions
+model_config:
+  name: "gemini-2.5-flash-preview-tts"
+  config:
+    multi_speaker: true
+    speakers:
+      - name: "Sarah"
+        voice_name: "Kore"  # Firm
+        description: "Professional team leader with a confident and authoritative tone. Speaks clearly and decisively, with a slight emphasis on important points. Maintains a warm but professional demeanor."
+      - name: "David"
+        voice_name: "Charon"  # 情報が豊富
+        description: "Technical project manager with a knowledgeable and analytical speaking style. Delivers information in a structured manner with clear explanations. Has a calm, reassuring voice when discussing challenges."
+    response_format: "wav"
+
+# Example of how the prompt will be constructed:
+# The system will automatically add speaker instructions like:
+# "Voice style instructions for each speaker:
+# - Sarah: Professional team leader with a confident and authoritative tone... (Voice characteristic: Firm)
+# - David: Technical project manager with a knowledgeable and analytical speaking style... (Voice characteristic: 情報が豊富)"
+
+# Alternative configuration for a casual conversation:
+# model_config:
+#   name: "gemini-2.5-flash-preview-tts"
+#   config:
+#     multi_speaker: true
+#     speakers:
+#       - name: "Emma"
+#         voice_name: "Achird"  # フレンドリー
+#         description: "Enthusiastic and bubbly friend who speaks with excitement and uses lots of expressions. Tends to speak a bit faster when excited."
+#       - name: "Mike"
+#         voice_name: "Zubenelgenubi"  # カジュアル
+#         description: "Relaxed and easygoing friend with a laid-back speaking style. Uses casual language and speaks at a comfortable pace."
+#     response_format: "wav"

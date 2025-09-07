@@ -1,0 +1,71 @@
+# Gemini Voice Showcase Configuration
+# This example demonstrates different voice characteristics
+
+# Text content showcasing different voice types
+text: |
+  Welcome to our voice showcase! Let me demonstrate different voice characteristics.
+  
+  This is a bright and energetic voice.
+  
+  Now, here's a calm and gentle voice.
+  
+  And finally, a professional and firm voice.
+
+# Output file path
+# output: "outputs/voice_showcase.wav"
+
+# Instructions for speech generation
+instructions: |
+  Please speak naturally and demonstrate the unique characteristics of each voice.
+  Use appropriate pacing and emphasis to highlight the voice differences.
+
+# Model configuration showcasing different voice types
+model_config:
+  name: "gemini-2.5-flash-preview-tts"
+  config:
+    multi_speaker: true
+    speakers:
+      - name: "Energetic"
+        voice_name: "Fenrir"  # Excitable
+        description: "High-energy, enthusiastic voice"
+      - name: "Gentle"
+        voice_name: "Vindemiatrix"  # Gentle
+        description: "Soft, calming voice"
+      - name: "Professional"
+        voice_name: "Kore"  # Firm
+        description: "Confident, professional voice"
+    response_format: "wav"
+
+# Alternative configurations for different use cases:
+
+# For friendly content:
+# model_config:
+#   name: "gemini-2.5-flash-preview-tts"
+#   config:
+#     multi_speaker: false
+#     voice: "Achird"  # フレンドリー
+#     response_format: "wav"
+
+# For informative content:
+# model_config:
+#   name: "gemini-2.5-flash-preview-tts"
+#   config:
+#     multi_speaker: false
+#     voice: "Charon"  # 情報が豊富
+#     response_format: "wav"
+
+# For casual content:
+# model_config:
+#   name: "gemini-2.5-flash-preview-tts"
+#   config:
+#     multi_speaker: false
+#     voice: "Zubenelgenubi"  # カジュアル
+#     response_format: "wav"
+
+# For warm, welcoming content:
+# model_config:
+#   name: "gemini-2.5-flash-preview-tts"
+#   config:
+#     multi_speaker: false
+#     voice: "Sulafat"  # Warm
+#     response_format: "wav"

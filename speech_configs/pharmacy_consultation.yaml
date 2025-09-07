@@ -1,0 +1,54 @@
+# Pharmacy Consultation Speech Configuration
+# This configuration generates a conversation between a pharmacist and a tired patient
+
+# Text content from speech.txt
+text: |
+  薬剤師「〇〇様は、今回が初めてなので、いくつか質問させてください。
+  現在治療中の病気や飲んでいるお薬はありますか？」
+  患者さん「特にありません。」
+  薬剤師「アレルギーや今までにかかった病気はありますか？」
+  患者さん「ありません。」
+  薬剤師「過去に薬を飲んで調子が悪くなったことはありますか？」
+  患者さん「ありません。」
+  薬剤師「煙草を吸ったりお酒を飲んだりする習慣がありますか？」
+  患者さん「お酒は飲むことがあります。」
+  薬剤師「お酒は週にどれくらい飲みますか？」
+  患者さん「毎日飲みます。ビール1杯くらいです。」
+  薬剤師「今日はどのような症状で受診されましたか？」
+  患者さん「朝から胃が痛くて。」
+  薬剤師「今回医師からは、どのような説明がありましたか？」
+  患者さん「胃が荒れているので、薬を出すと聞いていています。」
+
+# Output file path
+# output: "outputs/pharmacy_consultation.wav"
+
+# Instructions from tired_patient.txt
+instructions: |
+  曖昧な喋り方で、聞きにくいような話し方にしてください。
+
+# Model configuration for pharmacy consultation
+model_config:
+  name: "gemini-2.5-flash-preview-tts"
+  config:
+    multi_speaker: true
+    speakers:
+      - name: "薬剤師"
+        voice_name: "Vindemiatrix"  # Gentle - 優しい雰囲気に適している
+        description: "優しくて親切な薬剤師。患者のことを心配し、丁寧に質問する。声は穏やかで安心感を与える。曖昧で聞き取りにくい話し方をする。"
+      - name: "患者さん"
+        voice_name: "Achernar"  # Soft - 疲れた雰囲気に適している
+        description: "疲れていて体調が悪い患者。声は弱々しく、疲労感が伝わる。曖昧で聞き取りにくい話し方をする。"
+    response_format: "wav"
+
+# Alternative voice choices for different characteristics:
+# For pharmacist (優しい雰囲気):
+# - Vindemiatrix (Gentle) - 優しい
+# - Sulafat (Warm) - 温かい
+# - Callirrhoe (おおらか) - おおらか
+# - Achird (フレンドリー) - フレンドリー
+
+# For patient (疲れた雰囲気):
+# - Achernar (Soft) - ソフト
+# - Gacrux (成人向け) - 成人向け
+# - Enceladus (Breathy) - 息づかいのある
+# - Umbriel (Easy-going) - おおらか

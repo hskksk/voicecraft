@@ -1,0 +1,55 @@
+# Speech Generation Configuration
+# This file contains the default settings for speech generation
+
+# Text content to convert to speech
+# You can specify either text directly or a file path
+text: |
+  Hello, world! This is a sample text for speech generation.
+  
+  This is a multi-line example that demonstrates how to include
+  longer text content in the YAML configuration file.
+  
+  The text can span multiple lines and will be processed as
+  a single continuous text for speech generation.
+
+# Output file path (optional - if not specified, will auto-generate filename)
+# output: "output/sample_speech.wav"
+
+# Instructions for speech generation (optional)
+instructions: |
+  Please speak in a clear and natural tone.
+  Use appropriate pauses between sentences.
+  Maintain a professional and engaging delivery.
+  
+  If the text contains technical terms, pronounce them
+  clearly and with proper emphasis.
+
+# Model configuration
+model_config:
+  name: "gemini/gemini-2.5-flash-preview-tts"
+  config:
+    voice: "Kore"  # Available: alloy, echo, fable, onyx, nova, shimmer (OpenAI), Kore, Puck (Gemini)
+    response_format: "pcm16"  # Available: wav, pcm16
+
+# Alternative configuration examples:
+# 
+# For Gemini model:
+# model_config:
+#   name: "gemini/gemini-2.5-flash-preview-tts"
+#   config:
+#     voice: "Kore"
+#     response_format: "wav"
+# 
+# For different voice:
+# model_config:
+#   name: "openai/gpt-4o-audio-preview"
+#   config:
+#     voice: "echo"
+#     response_format: "wav"
+# 
+# For different format:
+# model_config:
+#   name: "openai/gpt-4o-audio-preview"
+#   config:
+#     voice: "alloy"
+#     response_format: "pcm16"
