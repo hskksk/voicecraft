@@ -11,3 +11,10 @@ dependencies = [
     "click>=8.0.0",
     "pyyaml>=6.0.0",
 ]
+
+[project.scripts]
+voicecraft = "voicecraft.__main__:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

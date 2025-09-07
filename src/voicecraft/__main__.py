@@ -49,8 +49,7 @@ def save_audio(audio_data: bytes, output_path: str):
 
 @click.command()
 @click.option('-c', '--config', 
-              default='speech_configs/full_example.yaml',
-              help='Path to YAML configuration file (default: speech_config.yaml)')
+              help='Path to YAML configuration file')
 @click.option('--override-text', 
               help='Override text from config file')
 @click.option('--override-output', 
