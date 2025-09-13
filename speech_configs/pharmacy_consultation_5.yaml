@@ -1,0 +1,32 @@
+text: |
+  薬剤師：すみません、こちらしょほうせんをかくにんしますね…（ちいさなこえで）こうせいぶっしつとせきどめがでています。こうせいぶっしつはいちにちにかい、あさとよるにのんでください。できるだけおなじじかんに、しょくごにふくようするのがのぞましいです。（こごえでもごもご）もしはきけがでたら、すこしたべてからのんでください。せきどめはねんまえにいっかいだけ、ようほう・ようりょうをまもってください。そうごさようとしては、とくにへいようきんきはすくないですが、アルコールはひかえてください。こうせいぶっしつはしょうじょうがかいぜんしても、くすりはさいごまできちんとのみきってください。ちゅうとはんぱにやめるとたいせいきんができることがあります。アレルギーはんのう、ほっしん、いきぐるしさ、つよいげりなどがでたらすぐにじゅしんしてください。（ちいさなこえで）まんがいちのみわすれたばあいは、きづいたじてんですみやかにのんで、つぎのかいとのかんかくがちかいばあいはむりににかいぶんをのまないでください。ほかんはちょくしゃにっこうをさけ、こうおんたしつのばしょをさけてください。くすりがふめいなてんがあれば、いつでもそうだんしてくださいね…（こえがちいさくつづく）。さいごに、こうせいぶっしつはちょうないかんきょうにえいきょうすることがあるので、ひつようならせいちょうざいをへいようすることもけんとうします。なにかしつもんはありますか…？
+
+  患者：はい。
+
+  薬剤師：（こごえでもごもご）ふくさようとしては、かるいいちょうしょうじょうやねんけがでることがあります。うんてんやきけんさぎょうをおこなうばあいは、せきどめでねむけがでないかかくにんしてください。にんしんちゅうやじゅにゅうちゅうのかたはねんのためいしにつたえてください。もししょうじょうがいちしゅうかんいじょうかいぜんしないばあいはじゅしんをおねがいします。いじょうがおもなちゅういてんです…（こごえで）わかりましたか？
+
+  患者：わかりました。
+
+  薬剤師：（こごえでもごもご）わかりにくかったてんはありせんか？くすりのなまえやのみかたをもういちどいいましょうか…（ちいさなこえで）こうせいぶっしつはあさよる、せきどめはしゅうしんまえに１かい、アルコールはひかえること。アレルギーやおもいふくさようがでたらすぐじゅしん。わからないことがあればでんわでもだいじょうぶです…。
+
+  患者：ありがとうございます。
+instructions: |
+  Speak in a low, mumbling voice for the pharmacist, making some phrases intentionally hard to hear but still comprehensible.
+  The patient should only give short acknowledgements (e.g., "はい", "わかりました", "ありがとうございます").
+  Aim for a natural pacing totaling approximately 2 minutes in duration.
+  Maintain distinct voice timbres for each speaker and include slight pauses between speaker turns.
+model_config:
+  name: "gemini-2.5-flash-preview-tts"
+  config:
+    multi_speaker: true
+    speakers:
+      - name: "薬剤師"
+        voice_name: "Achernar"
+        description: |
+          Low volume, mumbling, slightly hurried syllables, frequent soft pauses, polite tone.
+      - name: "患者"
+        voice_name: "Leda"
+        description: |
+          Short, clear acknowledgements, low frequency of speech, polite and brief.
+    response_format: "wav"
+    estimated_duration_seconds: 120

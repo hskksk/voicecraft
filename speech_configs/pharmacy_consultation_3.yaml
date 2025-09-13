@@ -1,0 +1,32 @@
+text: |
+  薬剤師: すみません、こちら処方箋を確認しますね…（小さな声で）抗生物質と咳止めが出ています。抗生物質は一日二回、朝と夜に飲んでください。できるだけ同じ時間に、食後に服用するのが望ましいです。（小声でモゴモゴ）もし吐き気が出たら、少し食べてから飲んでください。咳止めは眠前に一回だけ、用法・用量を守ってください。相互作用としては、特に併用禁忌は少ないですが、アルコールは控えてください。抗生物質は症状が改善しても、薬は最後まできちんと飲み切ってください。中途半端にやめると耐性菌ができることがあります。アレルギー反応、発疹、息苦しさ、強い下痢などが出たらすぐに受診してください。（小さな声で）万が一飲み忘れた場合は、気づいた時点で速やかに飲んで、次の回との間隔が近い場合は無理に二回分を飲まないでください。保管は直射日光を避け、高温多湿の場所を避けてください。薬が不明な点があれば、いつでも相談してくださいね…（声が小さく続く）。最後に、抗生物質は腸内環境に影響することがあるので、必要なら整腸剤を併用することも検討します。何か質問はありますか…？
+  
+  患者: はい。
+  
+  薬剤師: （小声でモゴモゴ）副作用としては、軽い胃腸症状や眠気が出ることがあります。運転や危険作業を行う場合は、咳止めで眠気が出ないか確認してください。妊娠中や授乳中の方は念のため医師に伝えてください。もし症状が一週間以上改善しない場合は受診をお願いします。以上が主な注意点です…（小声で）分かりましたか？
+  
+  患者: わかりました。
+  
+  薬剤師: （小声でモゴモゴ）分かりにくかった点はありませんか？薬の名前や飲み方をもう一度言いましょうか…（小さな声で）抗生物質は朝夜、咳止めは就寝前に1回、アルコールは控えること。アレルギーや重い副作用が出たらすぐ受診。わからないことがあれば電話でも大丈夫です…。
+  
+  患者: ありがとうございます。
+instructions: |
+  Speak in a low, mumbling voice for the pharmacist, making some phrases intentionally hard to hear but still comprehensible.
+  The patient should only give short acknowledgements (e.g., "はい", "わかりました", "ありがとうございます").
+  Aim for a natural pacing totaling approximately 2 minutes in duration.
+  Maintain distinct voice timbres for each speaker and include slight pauses between speaker turns.
+model_config:
+  name: "gemini-2.5-flash-preview-tts"
+  config:
+    multi_speaker: true
+    speakers:
+      - name: "薬剤師"
+        voice_name: "Achernar"
+        description: |
+          Low volume, mumbling, slightly hurried syllables, frequent soft pauses, polite tone.
+      - name: "患者"
+        voice_name: "Leda"
+        description: |
+          Short, clear acknowledgements, low frequency of speech, polite and brief.
+    response_format: "wav"
+    estimated_duration_seconds: 120

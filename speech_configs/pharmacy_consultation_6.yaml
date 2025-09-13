@@ -1,0 +1,32 @@
+text: |
+  薬剤師: すみません、こちゅら、しょほーすんをかくにんしましゅね…（ちいさなこえで）こーせいぶっしゅつとせきどめがでていましゅ。こーせいぶっしゅつわいちいにかい、あさちとよるにのんでくたしゃい。できるたけおなじじかんに、しょくごにふくよーしゅるのがのぞもしいです。（こごえでもごもご）もしはきけがでたわ、すこしたべてかてのんでくたしゃい。せきどめはねんまえにいっかいたけ、ようほー・ようりょーをまもってくたしゃい。そーごさようとしちぇわ、とくにへいよーきんきはすくないてしゅが、あるこーるはひかえてくたしゃい。こーせいぶっしゅつわしょうじょーがかえぜんしちぇも、くしゅりわさいごまできちんとのみきってくたしゃい。ちゅうとはんぱにやめるとたいせいきんがてきるこたがあります。あれるぎーはんのー、はっしん、いきぐるしさ、ちゅよいげりなどがてたらちゅぐにじゅしんちぇくたしゃい。（ちいさなこえで）まんがいちのみわすれたばあいわ、きづいたじってんてしゅみやかにのんで、ちゅぎのかいとのかんかくがちかいばあいわむりににかいぶんをのまないてくたしゃい。ほかんはちょくしゃにっこーをさけ、こーおんたしつのはしゅをさけちぇくたしゃい。くしゅりがふめいなてんがれわ、いつでもそーたんちぇくたしゃいね…（こえがちいさくつづく）。さいごに、こーせいぶっしゅつわちょーないかんきょーにえいきょーしゅることがあるのて、ひつようならちぇいちょーざいをへいよーしゅることもけんとうしゅましゅ。なにかしゅつもんはありましゅか…？
+
+  患者: はい。
+
+  薬剤師: （こごえでもごもご）ふくさようとしちぇわ、かるいいちょーしょーじょーやねむけがでることがありましゅ。うんてんやきけんさぎょーをおこなうばあいわ、せきどめでねむけがてないかかくにんちぇくたしゃい。にんしんちゅうやじゅにゅうちゅうのかたわねんのためいしにつたえちぇくたしゃい。もししょーじょーがいっしゅーかんいじょーかいぜんしないばあいわじゅしんをおねがいしゅましゅ。いじょーがおもなちゅういけんでしゅ…（こごえで）わかりましゅたか？
+
+  患者: わかりましゅた。
+
+  薬剤師: （こごえでもごもご）わかりにくかったてんはありましゅんか？くしゅりのなまえやのみかたをもういちといーましょーか…（ちいさなこえで）こーせいぶっしゅつはあさよる、せきどめはしゅーしんまえにちっかい、あるこーるはひかえること。あれるぎーやちょいふくさようがてたらちゅぐじゅしん。わからないことがれわてんわてものだいじょーぶてしゅ…。
+
+  患者: ありがとーごじゃいましゅ。
+instructions: |
+  Speak in a low, mumbling voice for the pharmacist, making some phrases intentionally hard to hear but still comprehensible.
+  The patient should only give short acknowledgements (e.g., "はい", "わかりました", "ありがとうございます").
+  Aim for a natural pacing totaling approximately 2 minutes in duration.
+  Maintain distinct voice timbres for each speaker and include slight pauses between speaker turns.
+model_config:
+  name: "gemini-2.5-flash-preview-tts"
+  config:
+    multi_speaker: true
+    speakers:
+      - name: "薬剤師"
+        voice_name: "Achernar"
+        description: |
+          Low volume, mumbling, slightly hurried syllables, frequent soft pauses, polite tone.
+      - name: "患者"
+        voice_name: "Leda"
+        description: |
+          Short, clear acknowledgements, low frequency of speech, polite and brief.
+    response_format: "wav"
+    estimated_duration_seconds: 120
