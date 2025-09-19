@@ -17,3 +17,6 @@ outputs/
 
 # logs
 logs/
+
+# devbox
+.devbox

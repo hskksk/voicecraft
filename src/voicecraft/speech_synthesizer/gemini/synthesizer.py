@@ -9,8 +9,9 @@ from typing import Dict, Any, List, Optional
 import os
 from google import genai
 from google.genai import types
-from .base import SpeechSynthesizer
-from .gemini_voices import GEMINI_VOICES, validate_voice, get_voice_info
+from ..base import SpeechSynthesizer
+from .voices import GEMINI_VOICES, validate_voice, get_voice_info
+from .models import get_model_info, validate_model, list_available_models
 
 
 class GeminiSpeechSynthesizer(SpeechSynthesizer):
@@ -24,7 +25,8 @@ class GeminiSpeechSynthesizer(SpeechSynthesizer):
         self.multi_speaker = config.get('multi_speaker', False)
         self.speakers = config.get('speakers', [])
         
-        # Validate voice names
+        # Validate model and voice names
+        self._validate_model()
         self._validate_voices()
         
         # Initialize Gemini client
@@ -32,6 +34,12 @@ class GeminiSpeechSynthesizer(SpeechSynthesizer):
         if not api_key:
             raise ValueError("GOOGLE_API_KEY environment variable is required")
         self.client = genai.Client(api_key=api_key)
+    
+    def _validate_model(self):
+        """Validate that the model is supported"""
+        if not validate_model(self.model):
+            available_models = list(get_model_info(self.model).keys()) if get_model_info(self.model) else []
+            raise ValueError(f"Unsupported model '{self.model}'. Available models: {available_models}")
     
     def _validate_voices(self):
         """Validate that all voice names are supported"""
@@ -202,3 +210,41 @@ class GeminiSpeechSynthesizer(SpeechSynthesizer):
             )
             self.speakers.append(speaker)
         self.multi_speaker = len(self.speakers) > 0
+    
+    @classmethod
+    def get_available_voices(cls) -> Dict[str, Dict[str, str]]:
+        """
+        Get available voices for Gemini synthesizer
+        
+        Returns:
+            Dictionary mapping voice names to their characteristics
+        """
+        return {
+            name: {
+                'characteristic': info.characteristic,
+                'category': info.category
+            }
+            for name, info in GEMINI_VOICES.items()
+        }
+    
+    @classmethod
+    def get_available_models(cls) -> Dict[str, Dict[str, Any]]:
+        """
+        Get available models for Gemini synthesizer
+        
+        Returns:
+            Dictionary mapping model names to their information
+        """
+        models = {}
+        for model_name, model_info in list_available_models().items():
+            models[model_name] = {
+                'name': model_info.name,
+                'provider': model_info.provider,
+                'type': model_info.type,
+                'description': model_info.description,
+                'supported_formats': model_info.supported_formats,
+                'multi_speaker': model_info.multi_speaker,
+                'max_text_length': model_info.max_text_length,
+                'features': model_info.features or []
+            }
+        return models

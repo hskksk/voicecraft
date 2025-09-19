@@ -4,6 +4,7 @@ from pathlib import Path
 import wave
 import click
 import yaml
+import uvicorn
 from voicecraft.filename_generator import FilenameGenerator
 from voicecraft.speech_synthesizer import synthesizer_factory
 from voicecraft.config_generator import ConfigGenerator
@@ -138,6 +139,30 @@ def gen(instructions, output, model, temperature, max_tokens, few_shot):
         click.echo(f"Config generated: {out_path}")
     except Exception as e:
         click.echo(f"Error generating config: {e}", err=True)
+        sys.exit(1)
+
+
+@cli.command("serve")
+@click.option('--host', default='0.0.0.0', help='Host to bind the server to')
+@click.option('--port', default=8000, help='Port to bind the server to')
+@click.option('--reload', is_flag=True, help='Enable auto-reload for development')
+@click.option('--log-level', default='info', help='Log level')
+def serve(host, port, reload, log_level):
+    """Start the VoiceCraft API server."""
+    click.echo(f"Starting VoiceCraft API server on {host}:{port}")
+    click.echo(f"API documentation available at: http://{host}:{port}/docs")
+    click.echo(f"Health check available at: http://{host}:{port}/health")
+    
+    try:
+        uvicorn.run(
+            "voicecraft.api.main:app",
+            host=host,
+            port=port,
+            reload=reload,
+            log_level=log_level
+        )
+    except Exception as e:
+        click.echo(f"Error starting API server: {e}", err=True)
         sys.exit(1)
 
 

@@ -5,7 +5,7 @@ This module provides the abstract base class for speech synthesis.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 
 class SpeechSynthesizer(ABC):
@@ -31,5 +31,27 @@ class SpeechSynthesizer(ABC):
             
         Returns:
             Audio data as bytes
+        """
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_available_voices(cls) -> Dict[str, Dict[str, str]]:
+        """
+        Get available voices for this synthesizer
+        
+        Returns:
+            Dictionary mapping voice names to their characteristics
+        """
+        pass
+    
+    @classmethod
+    @abstractmethod
+    def get_available_models(cls) -> Dict[str, Dict[str, Any]]:
+        """
+        Get available models for this synthesizer
+        
+        Returns:
+            Dictionary mapping model names to their information
         """
         pass

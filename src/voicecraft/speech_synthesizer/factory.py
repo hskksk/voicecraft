@@ -7,8 +7,15 @@ instances based on model names.
 
 from typing import Dict, Any
 from .base import SpeechSynthesizer
-from .openai_synthesizer import OpenAISpeechSynthesizer
-from .gemini_synthesizer import GeminiSpeechSynthesizer
+from .openai import OpenAISpeechSynthesizer
+from .gemini import GeminiSpeechSynthesizer
+
+
+def list_synthesizers() -> Dict[str, SpeechSynthesizer]:
+    return {
+        "gemini": GeminiSpeechSynthesizer,
+        "openai": OpenAISpeechSynthesizer,
+    }
 
 
 def synthesizer_factory(model_name: str, config: Dict[str, Any]) -> SpeechSynthesizer:
