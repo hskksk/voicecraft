@@ -4,6 +4,7 @@ Response models for API endpoints
 
 from typing import Optional, Dict, Any, List
 from pydantic import BaseModel, Field
+from mcp.types import AudioContent
 
 class BaseResponse(BaseModel):
     """Base response model"""
@@ -12,11 +13,12 @@ class BaseResponse(BaseModel):
 
 class SynthesisResponse(BaseResponse):
     """Synthesis response model"""
-    audio_data: Optional[str] = Field(None, description="Base64 encoded audio data")
+    audio_data: Optional[AudioContent] = Field(None description="Base64 encoded audio data")
     audio_format: Optional[str] = Field("wav", description="Audio format")
     duration: Optional[float] = Field(None, description="Audio duration in seconds")
     model_used: Optional[str] = Field(None, description="Model that was used")
     voice_used: Optional[str] = Field(None, description="Voice that was used")
+    config: Optional[Dict[str, Any]] = Field(None, description="Configuration used for synthesis")
 
 
 class ListAvailableModelsResponse(BaseResponse):

@@ -4,7 +4,12 @@ MCP (Model Context Protocol) API router
 
 import logging
 import os
+from fastmcp.utilities.types import Audio
 import yaml
+import base64
+import tempfile
+import datetime
+import hashlib
 from pathlib import Path
 from typing import Dict, Any, Optional, Annotated, List
 from pydantic import Field
@@ -21,9 +26,11 @@ from ..models.responses import (
 from ..models.requests import (
     ListAvailableVoicesRequest,
     GenerateConfigRequest,
+    SynthesizeRequest,
 )
 from ..dependencies import get_logger
-from ...speech_synthesizer import list_synthesizers
+from ...speech_synthesizer import list_synthesizers, synthesizer_factory
+from ...filename_generator import FilenameGenerator
 
 logger = logging.getLogger("voicecraft.api.mcp")
 
@@ -65,36 +72,57 @@ def create_mcp_app(parent_app: Optional[FastAPI] = None) -> FastMCP:
                 config_content=None,
             )
 
-    def synthesize(
-        text: Annotated[str, Field(description="Text to synthesize")],
-        model: Annotated[Optional[str], Field(description="Model name")],
-        voice: Annotated[Optional[str], Field(description="Voice name")],
-        config: Annotated[Optional[Dict[str, Any]], Field(description="Additional configuration")] = None,
-    ) -> SynthesisResponse:
+    @app.tool()
+    def synthesize(request: SynthesizeRequest) -> SynthesisResponse:
         """
-        Advanced speech synthesis with full configuration options
+        Advanced speech synthesis with full configuration options using VoiceCraft synthesizers
         """
         try:
-            logger.info(f"MCP advanced synthesis request: text='{text[:50]}...'")
+            logger.info(f"MCP synthesis request: text='{request.text[:50]}...', model='{request.model}', voice='{request.voice}'")
             
-            # TODO: Integrate with actual VoiceCraft synthesis
-            # For now, return a stub response
+            # Determine model and voice with defaults
+            model = request.model or "openai/gpt-4o-audio-preview"
+            voice = request.voice or "alloy"
+            
+            # Build synthesizer configuration
+            synthesizer_config = {
+                'model': model,
+                'voice': voice,
+                'response_format': 'wav',
+            }
+            
+            # Add any additional config from request
+            if request.config:
+                synthesizer_config.update(request.config)
+            
+            # Create synthesizer instance
+            synthesizer = synthesizer_factory(model, synthesizer_config)
+            
+            # Generate speech
+            audio_data = synthesizer.synthesize(request.text, request.instructions)
+            
             return SynthesisResponse(
                 success=True,
-                message="Advanced speech synthesis completed (stub)",
-                audio_data="stub_advanced_audio_data_base64",  # Placeholder
-                audio_format="wav",
-                duration=2.0,  # Placeholder
-                model_used=model or "default",
-                voice_used=voice or "default",
-                config=config or {}
+                message="Speech synthesis completed successfully",
+                audio_data=Audio(
+                    data=audio_data,
+                    format="wav",
+                    annotations=None,
+                ).to_audio_content(),
+                model_used=model,
+                voice_used=voice,
+                config=synthesizer_config
             )
             
         except Exception as e:
-            logger.error(f"MCP advanced synthesis error: {e}")
-            raise HTTPException(
-                status_code=500,
-                detail=f"Advanced synthesis failed: {str(e)}"
+            logger.error(f"MCP synthesis error: {e}")
+            return SynthesisResponse(
+                success=False,
+                message=f"Synthesis failed: {str(e)}",
+                audio_data=None,
+                model_used=request.model,
+                voice_used=request.voice,
+                config=request.config
             )
 
     @app.tool()
